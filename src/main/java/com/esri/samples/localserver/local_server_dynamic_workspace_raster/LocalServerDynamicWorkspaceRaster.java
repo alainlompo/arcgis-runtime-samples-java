@@ -23,8 +23,8 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import com.esri.arcgisruntime.data.ServiceFeatureTable;
-import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
+import com.esri.arcgisruntime.layers.ArcGISMapImageSublayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.localserver.LocalMapService;
 import com.esri.arcgisruntime.localserver.LocalServer;
@@ -41,8 +41,8 @@ public class LocalServerDynamicWorkspaceRaster extends Application {
 
   private ArcGISMap map;
   private MapView mapView;
-  private LocalMapService mapService;
-  private ProgressIndicator featureLayerProgress;
+  private LocalMapService mapImageService;
+  private ProgressIndicator imageLayerProgress;
 
   private static final LocalServer server = LocalServer.INSTANCE;
 
@@ -67,8 +67,8 @@ public class LocalServerDynamicWorkspaceRaster extends Application {
       mapView.setMap(map);
 
       // track progress of loading feature layer to map
-      featureLayerProgress = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
-      featureLayerProgress.setMaxWidth(30);
+      imageLayerProgress = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
+      imageLayerProgress.setMaxWidth(30);
 
       // start local server
       server.startAsync();
@@ -77,15 +77,15 @@ public class LocalServerDynamicWorkspaceRaster extends Application {
           // start feature service
           //            String featureServiceURL = new File("samples-data/local_server/PointsofInterest.mpk").getAbsolutePath();
           String mapServiceURL = "/Program Files (x86)/ArcGIS SDKs/java10.2.4/sdk/samples/data/mpks/mpk_blank.mpk";
-          mapService = new LocalMapService(mapServiceURL);
-          //            featureService.addStatusChangedListener(this::addLocalFeatureLayer);
-          mapService.startAsync();
+          mapImageService = new LocalMapService(mapServiceURL);
+          mapImageService.addStatusChangedListener(this::addLocalMapImageLayer);
+          mapImageService.startAsync();
         }
       });
 
       // add view to application window
-      stackPane.getChildren().addAll(mapView, featureLayerProgress);
-      StackPane.setAlignment(featureLayerProgress, Pos.CENTER);
+      stackPane.getChildren().addAll(mapView, imageLayerProgress);
+      StackPane.setAlignment(imageLayerProgress, Pos.CENTER);
     } catch (Exception e) {
       // on any error, display the stack trace.
       e.printStackTrace();
@@ -93,32 +93,35 @@ public class LocalServerDynamicWorkspaceRaster extends Application {
   }
 
   /**
-   * Once the feature service starts, a feature layer is created from that service and added to the map.
+   * Once the map service starts, a map image layer is created from that service and added to the map.
    * <p>
-   * When the feature layer is done loading the view will zoom to the location of were the features were added.
+   * When the map image layer is done loading, the view will zoom to the location of were the image has been added.
    * 
    * @param status status of feature service
    */
-  private void addLocalFeatureLayer(StatusChangedEvent status) {
+  private void addLocalMapImageLayer(StatusChangedEvent status) {
 
-    // check that the feature service has started
+    // check that the map service has started
     if (status.getNewStatus() == LocalServerStatus.STARTED) {
-      // get the url of where feature service is located
-      String url = mapService.getUrl() + "/0";
-      // create a feature layer using the url
-      ServiceFeatureTable featureTable = new ServiceFeatureTable(url);
-      featureTable.loadAsync();
-      FeatureLayer featureLayer = new FeatureLayer(featureTable);
-      featureLayer.addDoneLoadingListener(() -> {
-        if (featureLayer.getLoadStatus() == LoadStatus.LOADED && featureLayer.getFullExtent() != null) {
-          mapView.setViewpoint(new Viewpoint(featureLayer.getFullExtent()));
-          Platform.runLater(() -> featureLayerProgress.setVisible(false));
+      // get the url of where map service is located
+      String url = mapImageService.getUrl();
+      // create a map image layer using url
+      ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(url);
+      // set viewpoint once layer has loaded
+      imageLayer.addDoneLoadingListener(() -> {
+        if (imageLayer.getLoadStatus() == LoadStatus.LOADED && imageLayer.getFullExtent() != null) {
+          mapView.setViewpoint(new Viewpoint(imageLayer.getFullExtent()));
+          Platform.runLater(() -> imageLayerProgress.setVisible(false));
+
+          RasterWorkspaceSource tableSource = new RasterWorkspaceSource("raster_fgdb", "DynamicWorkspace_Raster");
+          DataSublayerSource source = new DataSublayerSource(tableSource);
+          ArcGISMapImageSublayer newSL = new ArcGISMapImageSublayer(101, source);
+          imageLayer.getSublayers().add(newSL);
         }
       });
-      featureLayer.loadAsync();
-      // add feature layer to map
-      map.getOperationalLayers().add(featureLayer);
-
+      imageLayer.loadAsync();
+      // add image layer to map
+      mapView.getMap().getOperationalLayers().add(imageLayer);
     }
   }
 
