@@ -35,7 +35,9 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -48,7 +50,7 @@ public class LocalServerFeatureLayerSample extends Application {
   private LocalFeatureService featureService;
   private ProgressIndicator featureLayerProgress;
   
-  private static final LocalServer server = LocalServer.INSTANCE;
+  private LocalServer server;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -73,18 +75,49 @@ public class LocalServerFeatureLayerSample extends Application {
       // track progress of loading feature layer to map
       featureLayerProgress = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
       featureLayerProgress.setMaxWidth(30);
-
-      // start local server
-      server.startAsync();
-      server.addStatusChangedListener(status -> {
-        if (server.getStatus() == LocalServerStatus.STARTED) {
-          // start feature service
-          String featureServiceURL = new File("samples-data/local_server/PointsofInterest.mpk").getAbsolutePath();
-          featureService = new LocalFeatureService(featureServiceURL);
-          featureService.addStatusChangedListener(this::addLocalFeatureLayer);
-          featureService.startAsync();
-        }
-      });
+      
+      // check that local server install path can be accessed
+      if(LocalServer.INSTANCE.checkInstallValid()){
+        server = LocalServer.INSTANCE;
+     // start local server
+        server.startAsync();
+        server.addStatusChangedListener(status -> {
+          if (server.getStatus() == LocalServerStatus.STARTED) {
+            // start feature service
+          //[DocRef: Name=Fundamentals-Local_Server-Map_Service
+            String featureServiceURL = new File("samples-data/local_server/PointsofInterest.mpk").getAbsolutePath();
+            featureService = new LocalFeatureService(featureServiceURL);
+            featureService.addStatusChangedListener(l -> {
+                // get the url of where feature service is located
+                String url = featureService.getUrl() + "/0";
+                // create a feature layer using the url
+                ServiceFeatureTable featureTable = new ServiceFeatureTable(url);
+                featureTable.loadAsync();
+                FeatureLayer featureLayer = new FeatureLayer(featureTable);
+                featureLayer.addDoneLoadingListener(() -> {
+                  if (featureLayer.getLoadStatus() == LoadStatus.LOADED && featureLayer.getFullExtent() != null) {
+                    mapView.setViewpoint(new Viewpoint(featureLayer.getFullExtent()));
+                    Platform.runLater(() -> featureLayerProgress.setVisible(false));
+                  }
+                });
+                featureLayer.loadAsync();
+                // add feature layer to map
+                map.getOperationalLayers().add(featureLayer);
+            });
+            featureService.startAsync();
+          //[DocRef: Name=Fundamentals-Local_Server-Map_Service
+          }
+        });
+      } else {
+        Platform.runLater(() -> {
+          Alert dialog = new Alert(AlertType.INFORMATION);
+          dialog.setHeaderText("Local Server Load Error");
+          dialog.setContentText("Local Server install path couldn't be located.");
+          dialog.showAndWait();
+          
+          Platform.exit();
+        });
+      }
 
       // add view to application window
       stackPane.getChildren().addAll(mapView, featureLayerProgress);
@@ -94,37 +127,7 @@ public class LocalServerFeatureLayerSample extends Application {
       e.printStackTrace();
     }
   }
-
-  /**
-   * Once the feature service starts, a feature layer is created from that service and added to the map.
-   * <p>
-   * When the feature layer is done loading the view will zoom to the location of were the features were added.
-   * 
-   * @param status status of feature service
-   */
-  private void addLocalFeatureLayer(StatusChangedEvent status) {
-
-    // check that the feature service has started
-    if (status.getNewStatus() == LocalServerStatus.STARTED) {
-      // get the url of where feature service is located
-      String url = featureService.getUrl() + "/0";
-      // create a feature layer using the url
-      ServiceFeatureTable featureTable = new ServiceFeatureTable(url);
-      featureTable.loadAsync();
-      FeatureLayer featureLayer = new FeatureLayer(featureTable);
-      featureLayer.addDoneLoadingListener(() -> {
-        if (featureLayer.getLoadStatus() == LoadStatus.LOADED && featureLayer.getFullExtent() != null) {
-          mapView.setViewpoint(new Viewpoint(featureLayer.getFullExtent()));
-          Platform.runLater(() -> featureLayerProgress.setVisible(false));
-        }
-      });
-      featureLayer.loadAsync();
-      // add feature layer to map
-      map.getOperationalLayers().add(featureLayer);
-
-    }
-  }
-
+  
   /**
    * Stops and releases all resources used in application.
    */

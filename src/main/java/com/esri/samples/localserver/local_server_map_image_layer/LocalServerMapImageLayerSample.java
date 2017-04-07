@@ -33,7 +33,9 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -45,7 +47,7 @@ public class LocalServerMapImageLayerSample extends Application {
   private LocalMapService mapImageService;
   private ProgressIndicator imageLayerProgress;
   
-  private static final LocalServer server = LocalServer.INSTANCE;
+  private LocalServer server;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -70,18 +72,48 @@ public class LocalServerMapImageLayerSample extends Application {
       // track progress of loading map image layer to map
       imageLayerProgress = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
       imageLayerProgress.setMaxWidth(30);
-
-      // start local server
-      server.addStatusChangedListener(status -> {
-        if (status.getNewStatus() == LocalServerStatus.STARTED) {
-          // start map image service
-          String mapServiceURL = new File("./samples-data/local_server/RelationshipID.mpk").getAbsolutePath();
-          mapImageService = new LocalMapService(mapServiceURL);
-          mapImageService.addStatusChangedListener(this::addLocalMapImageLayer);
-          mapImageService.startAsync();
-        }
-      });
-      server.startAsync();
+      
+   // check that local server install path can be accessed
+      if(LocalServer.INSTANCE.checkInstallValid()){
+        server = LocalServer.INSTANCE;
+     // start local server
+        server.addStatusChangedListener(status -> {
+          if (status.getNewStatus() == LocalServerStatus.STARTED) {
+          //[DocRef: Name=Fundamentals-Local_Server-MapService
+            // start map image service
+            String mapServiceURL = new File("./samples-data/local_server/RelationshipID.mpk").getAbsolutePath();
+            mapImageService = new LocalMapService(mapServiceURL);
+            mapImageService.addStatusChangedListener(l -> {
+                // get the url of where map service is located
+                String url = mapImageService.getUrl();
+                // create a map image layer using url
+                ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(url);
+                // set viewpoint once layer has loaded
+                imageLayer.addDoneLoadingListener(() -> {
+                  if (imageLayer.getLoadStatus() == LoadStatus.LOADED && imageLayer.getFullExtent() != null) {
+                    mapView.setViewpoint(new Viewpoint(imageLayer.getFullExtent()));
+                    Platform.runLater(() -> imageLayerProgress.setVisible(false));
+                  }
+                });
+                imageLayer.loadAsync();
+                // add image layer to map
+                mapView.getMap().getOperationalLayers().add(imageLayer);
+            });
+            mapImageService.startAsync();
+          //[DocRef: Name=Fundamentals-Local_Server-MapService
+          }
+        });
+        server.startAsync();
+      } else {
+        Platform.runLater(() -> {
+          Alert dialog = new Alert(AlertType.INFORMATION);
+          dialog.setHeaderText("Local Server Load Error");
+          dialog.setContentText("Local Server install path couldn't be located.");
+          dialog.showAndWait();
+          
+          Platform.exit();
+        });
+      }
 
       // add view to application window with progress bar
       stackPane.getChildren().addAll(mapView, imageLayerProgress);
@@ -89,34 +121,6 @@ public class LocalServerMapImageLayerSample extends Application {
     } catch (Exception e) {
       // on any error, display the stack trace.
       e.printStackTrace();
-    }
-  }
-
-  /**
-   * Once the map service starts, a map image layer is created from that service and added to the map.
-   * <p>
-   * When the map image layer is done loading, the view will zoom to the location of were the image has been added.
-   * 
-   * @param status status of feature service
-   */
-  private void addLocalMapImageLayer(StatusChangedEvent status) {
-
-    // check that the map service has started
-    if (status.getNewStatus() == LocalServerStatus.STARTED) {
-      // get the url of where map service is located
-      String url = mapImageService.getUrl();
-      // create a map image layer using url
-      ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(url);
-      // set viewpoint once layer has loaded
-      imageLayer.addDoneLoadingListener(() -> {
-        if (imageLayer.getLoadStatus() == LoadStatus.LOADED && imageLayer.getFullExtent() != null) {
-          mapView.setViewpoint(new Viewpoint(imageLayer.getFullExtent()));
-          Platform.runLater(() -> imageLayerProgress.setVisible(false));
-        }
-      });
-      imageLayer.loadAsync();
-      // add image layer to map
-      mapView.getMap().getOperationalLayers().add(imageLayer);
     }
   }
 

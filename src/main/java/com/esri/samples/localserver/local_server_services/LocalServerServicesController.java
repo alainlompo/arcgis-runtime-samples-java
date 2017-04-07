@@ -37,15 +37,25 @@ public class LocalServerServicesController {
   private ListenableList<LocalService> services;
   private HostServices hostServices;
 
-  private static final LocalServer server = LocalServer.INSTANCE;
+  private LocalServer server;
 
   @FXML
   private void initialize() {
-    // watch server status
-    server.addStatusChangedListener(status -> {
-      statusLog.appendText("Server Status: " + status.getNewStatus().toString() + "\n");
-      btnStartServer.setDisable(status.getNewStatus() == LocalServerStatus.STARTED);
-    });
+  //[DocRef: Name=Fundamentals-Local_Server-Check_Install
+    // check that local server install path can be accessed
+    if(LocalServer.INSTANCE.checkInstallValid()){
+      server = LocalServer.INSTANCE;
+    } else {
+      Platform.runLater(() -> {
+        Alert dialog = new Alert(AlertType.INFORMATION);
+        dialog.setHeaderText("Local Server Load Error");
+        dialog.setContentText("Local Server install path couldn't be located.");
+        dialog.showAndWait();
+        
+        Platform.exit();
+      });
+    }
+  //[DocRef: Name=Fundamentals-Local_Server-Check_Install
   }
 
   /** 
@@ -53,8 +63,16 @@ public class LocalServerServicesController {
    */
   @FXML
   private void handleStartLocalServer() {
+  //[DocRef: Name=Fundamentals-Local_Server-Start
     // start local server
     server.startAsync();
+    
+ // watch server status
+    server.addStatusChangedListener(status -> {
+      statusLog.appendText("Server Status: " + status.getNewStatus().toString() + "\n");
+      btnStartServer.setDisable(status.getNewStatus() == LocalServerStatus.STARTED);
+    });
+  //[DocRef: Name=Fundamentals-Local_Server-Start
 
     // get observable list of services
     services = server.getServices();
@@ -65,10 +83,12 @@ public class LocalServerServicesController {
    */
   @FXML
   private void handleStopLocalServer() {
+    //[DocRef: Name=Fundamentals-Local_Server-Stop
     // stop local server
     if (server.getStatus() == LocalServerStatus.STARTED) {
       server.stopAsync();
     }
+    //[DocRef: Name=Fundamentals-Local_Server-Stop
 
     // remove listed running services
     runningServices.getItems().clear();

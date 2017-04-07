@@ -26,9 +26,9 @@ import javafx.stage.Stage;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
-//[DocRef: Name=GetStarted_FirstMapApp_Imports
+//[DocRef: Name=Get_Started-First_Map_App-Imports
 
-//[DocRef: Name=GetStarted_FirstMapApp_Variable
+//[DocRef: Name=Get_Started-First_Map_App-Variable
 public class DisplayMapSample extends Application {
 
   private MapView mapView;
@@ -49,7 +49,7 @@ public class DisplayMapSample extends Application {
       stage.setScene(scene);
       stage.show();
 
-      //[DocRef: Name=GetStarted_FirstMapApp_DisplayMap
+      //[DocRef: Name=Get_Started-First_Map_App-DisplayMap
       // create a ArcGISMap with the a Basemap instance with an Imagery base
       // layer
       ArcGISMap map = new ArcGISMap(Basemap.createImagery());
@@ -60,14 +60,14 @@ public class DisplayMapSample extends Application {
 
       // add the map view to stack pane
       stackPane.getChildren().addAll(mapView);
-      //[DocRef: Name=GetStarted_FirstMapApp_DisplayMap
+      //[DocRef: Name=Get_Started-First_Map_App-DisplayMap
     } catch (Exception e) {
       // on any error, display the stack trace.
       e.printStackTrace();
     }
   }
 
-  //[DocRef: Name=GetStarted_FirstMapApp_Dispose
+  //[DocRef: Name=Get_Started-First_Map_App-Dispose
   /**
    * Stops and releases all resources used in application.
    */
@@ -78,7 +78,7 @@ public class DisplayMapSample extends Application {
       mapView.dispose();
     }
   }
-  //[DocRef: Name=GetStarted_FirstMapApp_Dispose
+  //[DocRef: Name=Get_Started-First_Map_App-ispose
 
   /**
    * Opens and runs application.
@@ -91,4 +91,4 @@ public class DisplayMapSample extends Application {
   }
 
 }
-//[DocRef: Name=GetStarted_FirstMapApp_FirstApplication
+//[DocRef: Name=Get_Started-First_Map_App-FirstApplication
