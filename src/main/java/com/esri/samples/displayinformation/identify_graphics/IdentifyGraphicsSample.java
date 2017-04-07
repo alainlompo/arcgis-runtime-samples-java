@@ -61,9 +61,6 @@ public class IdentifyGraphicsSample extends Application {
       stage.setScene(scene);
       stage.show();
 
-      // create a graphics overlay
-      graphicsOverlay = new GraphicsOverlay();
-
       // create a ArcGISMap with BaseMap topographic
       final ArcGISMap map = new ArcGISMap(Basemap.createTopographic());
 
@@ -71,12 +68,17 @@ public class IdentifyGraphicsSample extends Application {
       mapView = new MapView();
       mapView.setMap(map);
 
+      //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay
+   // create a graphics overlay
+      graphicsOverlay = new GraphicsOverlay();
       // add graphics overlay to the map view
       mapView.getGraphicsOverlays().add(graphicsOverlay);
+    //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay
 
       // work with the MapView after it has loaded
       mapView.addSpatialReferenceChangedListener(src -> addGraphicsOverlay());
 
+    //[DocRef: Name=Display_Information-Graphics-Identify
       mapView.setOnMouseClicked(e -> {
         if (e.getButton() == MouseButton.PRIMARY && e.isStillSincePress()) {
           // create a point from location clicked
@@ -88,6 +90,7 @@ public class IdentifyGraphicsSample extends Application {
           identifyGraphics.addDoneListener(() -> Platform.runLater(this::createGraphicDialog));
         }
       });
+    //[DocRef: Name=Display_Information-Graphics-Identify
 
       // add the map view to stack pane
       stackPane.getChildren().add(mapView);
@@ -120,6 +123,7 @@ public class IdentifyGraphicsSample extends Application {
     graphicsOverlay.getGraphics().add(polygonGraphic);
   }
 
+//[DocRef: Name=Display_Information-Graphics-Identify_Dialog
   /**
    * Indicates when a graphic is clicked by showing an Alert.
    */
@@ -143,6 +147,7 @@ public class IdentifyGraphicsSample extends Application {
       e.printStackTrace();
     }
   }
+//[DocRef: Name=Display_Information-Graphics-Identify_Dialog
 
   /**
    * Stops and releases all resources used in application.

@@ -78,6 +78,7 @@ public class ElevationModeSample extends Application {
       scene.setBaseSurface(surface);
 
       // create overlays with elevation modes
+    //[DocRef: Name=Working_With_3D-Add_Graphics-Surface_Placement
       GraphicsOverlay drapedOverlay = new GraphicsOverlay();
       drapedOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.DRAPED);
       sceneView.getGraphicsOverlays().add(drapedOverlay);
@@ -88,12 +89,6 @@ public class ElevationModeSample extends Application {
       absoluteOverlay.getSceneProperties().setSurfacePlacement(SurfacePlacement.ABSOLUTE);
       sceneView.getGraphicsOverlays().add(absoluteOverlay);
 
-      // create point for graphic location
-      Point point = new Point(-4.04, 53.06, 1000, camera.getLocation().getSpatialReference());
-
-      // create a red (0xFFFF0000) circle symbol
-      SimpleMarkerSymbol circleSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 10);
-
       // create a text symbol for each elevation mode
       TextSymbol drapedText = new TextSymbol(10, "DRAPED", 0xFFFFFFFF, HorizontalAlignment.LEFT,
           VerticalAlignment.MIDDLE);
@@ -101,17 +96,25 @@ public class ElevationModeSample extends Application {
           VerticalAlignment.MIDDLE);
       TextSymbol absoluteText = new TextSymbol(10, "ABSOLUTE", 0xFFFFFFFF, HorizontalAlignment.LEFT,
           VerticalAlignment.MIDDLE);
+      
+      // create point for graphic location
+      Point point = new Point(-4.04, 53.06, 1000, camera.getLocation().getSpatialReference());
+
+      SimpleMarkerSymbol redSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 10);
+      SimpleMarkerSymbol greenSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF00FF00, 10);
+      SimpleMarkerSymbol blueSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFF0000FF, 10);
 
       // add the point graphic and text graphic to the corresponding graphics
       // overlay
-      drapedOverlay.getGraphics().add(new Graphic(point, circleSymbol));
+      drapedOverlay.getGraphics().add(new Graphic(point, redSymbol));
       drapedOverlay.getGraphics().add(new Graphic(point, drapedText));
 
-      relativeOverlay.getGraphics().add(new Graphic(point, circleSymbol));
+      relativeOverlay.getGraphics().add(new Graphic(point, greenSymbol));
       relativeOverlay.getGraphics().add(new Graphic(point, relativeText));
 
-      absoluteOverlay.getGraphics().add(new Graphic(point, circleSymbol));
+      absoluteOverlay.getGraphics().add(new Graphic(point, blueSymbol));
       absoluteOverlay.getGraphics().add(new Graphic(point, absoluteText));
+    //[DocRef: Name=Working_With_3D-Add_Graphics-Surface_Placement
 
     } catch (Exception e) {
       // on any error, display the stack trace

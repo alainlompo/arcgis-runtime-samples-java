@@ -124,7 +124,9 @@ public class FindRouteSample extends Application {
 
       // clear the route and the directions maneuver found
       resetButton.setOnAction(e -> {
+        //[DocRef: Name=Display_Information-Graphics-Remove_Graphic
         routeGraphicsOverlay.getGraphics().remove(routeGraphic);
+        //[DocRef: Name=Display_Information-Graphics-Remove_Graphic
         directionsList.getItems().clear();
         resetButton.setDisable(true);
         findButton.setDisable(false);

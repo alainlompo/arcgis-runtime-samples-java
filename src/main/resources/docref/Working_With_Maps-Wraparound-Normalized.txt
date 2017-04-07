@@ -1,0 +1,5 @@
+//[DocRef: Name=Working_With_Maps-Wraparound-Normalized
+if (jMap.isWrapAroundEnabled()) {
+  Geometry normalized = GeometryEngine.normalizeCentralMeridian(jMap.getExtent(), jMap.getSpatialReference());
+}
+//[DocRef: Name=Working_With_Maps-Wraparound-Normalized

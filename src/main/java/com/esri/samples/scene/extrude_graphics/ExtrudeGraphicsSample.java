@@ -85,12 +85,14 @@ public class ExtrudeGraphicsSample extends Application {
       GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
       graphicsOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED);
 
+    //[DocRef: Name=Working_With_3D-Add_Graphics-Extrusion
       // set renderer with extrusion property
       SimpleRenderer renderer = new SimpleRenderer();
       SceneProperties renderProperties = renderer.getSceneProperties();
       renderProperties.setExtrusionMode(SceneProperties.ExtrusionMode.BASE_HEIGHT);
       renderProperties.setExtrusionExpression("[HEIGHT]");
       graphicsOverlay.setRenderer(renderer);
+      //[DocRef: Name=Working_With_3D-Add_Graphics-Extrusion
 
       // setup graphic positions
       double squareSize = 0.01;

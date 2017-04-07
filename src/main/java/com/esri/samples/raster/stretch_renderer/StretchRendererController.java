@@ -87,6 +87,7 @@ public class StretchRendererController {
     maxSlider.setDisable(false);
     factorSlider.setDisable(true);
 
+  //[DocRef: Name=Working_With_Maps-Add_Raster_Data-Stretch_Renderer
     double min = minSlider.getValue();
     double max = maxSlider.getValue();
 
@@ -103,8 +104,8 @@ public class StretchRendererController {
 
     // create blend renderer
     StretchRenderer stretchRenderer = new StretchRenderer(stretchParameters, null, true, null);
-
     rasterLayer.setRasterRenderer(stretchRenderer);
+  //[DocRef: Name=Working_With_Maps-Add_Raster_Data-Stretch_Renderer
   }
 
   /**

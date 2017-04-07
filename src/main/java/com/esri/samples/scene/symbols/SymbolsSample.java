@@ -76,10 +76,12 @@ public class SymbolsSample extends Application {
       surface.getElevationSources().add(elevationSource);
       scene.setBaseSurface(surface);
 
-      // add graphics overlay(s)
+      //[DocRef: Name=Working_With_3D-Add_Graphics-GraphicsOverlay
+      // all graphics will be displayed with bottom touching surface
       GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
       graphicsOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.ABSOLUTE);
       sceneView.getGraphicsOverlays().add(graphicsOverlay);
+    //[DocRef: Name=Working_With_3D-Add_Graphics-GraphicsOverlay
 
       // create graphics for each type of symbol
       AtomicInteger counter = new AtomicInteger(0);

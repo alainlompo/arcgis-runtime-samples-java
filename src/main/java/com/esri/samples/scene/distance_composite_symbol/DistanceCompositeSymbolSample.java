@@ -76,6 +76,7 @@ public class DistanceCompositeSymbolSample extends Application {
       graphicsOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
       sceneView.getGraphicsOverlays().add(graphicsOverlay);
 
+      //[DocRef: Name=Working_With_3D-Add_Graphics-Distance_Composite_Symbol
       // set up the different symbols
       int red = 0xFFFF0000;
       SimpleMarkerSymbol circleSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, red, 10);
@@ -96,6 +97,7 @@ public class DistanceCompositeSymbolSample extends Application {
       Graphic aircraftGraphic = new Graphic(aircraftPosition, compositeSymbol);
       // add graphic to graphics overlay
       graphicsOverlay.getGraphics().add(aircraftGraphic);
+    //[DocRef: Name=Working_With_3D-Add_Graphics-Distance_Composite_Symbol
 
       // add a camera and initial camera position
       Camera camera = new Camera(aircraftPosition, 20, 0, 70.0, 0.0);
