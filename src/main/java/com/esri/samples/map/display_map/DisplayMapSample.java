@@ -14,20 +14,25 @@
  * the License.
  */
 
+//[DocRef: Name=GetStarted_FirstMapApp_FirstApplication
 package com.esri.samples.map.display_map;
-
-import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.view.MapView;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+//[DocRef: Name=GetStarted_FirstMapApp_Imports
+import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.MapView;
+//[DocRef: Name=GetStarted_FirstMapApp_Imports
+
+//[DocRef: Name=GetStarted_FirstMapApp_Variable
 public class DisplayMapSample extends Application {
 
   private MapView mapView;
+  //[DocRef: Name=GetStarted_FirstMapApp_Variable
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -44,6 +49,7 @@ public class DisplayMapSample extends Application {
       stage.setScene(scene);
       stage.show();
 
+      //[DocRef: Name=GetStarted_FirstMapApp_DisplayMap
       // create a ArcGISMap with the a Basemap instance with an Imagery base
       // layer
       ArcGISMap map = new ArcGISMap(Basemap.createImagery());
@@ -54,12 +60,14 @@ public class DisplayMapSample extends Application {
 
       // add the map view to stack pane
       stackPane.getChildren().addAll(mapView);
+      //[DocRef: Name=GetStarted_FirstMapApp_DisplayMap
     } catch (Exception e) {
       // on any error, display the stack trace.
       e.printStackTrace();
     }
   }
 
+  //[DocRef: Name=GetStarted_FirstMapApp_Dispose
   /**
    * Stops and releases all resources used in application.
    */
@@ -70,6 +78,7 @@ public class DisplayMapSample extends Application {
       mapView.dispose();
     }
   }
+  //[DocRef: Name=GetStarted_FirstMapApp_Dispose
 
   /**
    * Opens and runs application.
@@ -82,3 +91,4 @@ public class DisplayMapSample extends Application {
   }
 
 }
+//[DocRef: Name=GetStarted_FirstMapApp_FirstApplication
