@@ -81,7 +81,7 @@ public class AddFeaturesSample extends Application {
       // add the layer to the ArcGISMap
       map.getOperationalLayers().add(featureLayer);
 
-    //[DocRef: Name=Edit_Features-EditFeatures-Convert_Point
+      //[DocRef: Name=Edit_Features-EditFeatures-Convert_Point-Java
       mapView.setOnMouseClicked(event -> {
         // check that the primary mouse button was clicked
         if (event.isStillSincePress() && event.getButton() == MouseButton.PRIMARY) {
@@ -98,7 +98,7 @@ public class AddFeaturesSample extends Application {
           addFeature(normalizedMapPoint, featureTable);
         }
       });
-    //[DocRef: Name=Edit_Features-EditFeatures-Convert_Point
+      //[DocRef: Name=Edit_Features-EditFeatures-Convert_Point-Java
 
       // set ArcGISMap to be displayed in map view
       mapView.setMap(map);

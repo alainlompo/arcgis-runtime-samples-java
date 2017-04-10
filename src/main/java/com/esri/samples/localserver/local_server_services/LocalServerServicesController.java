@@ -18,14 +18,23 @@ package com.esri.samples.localserver.local_server_services;
 
 import java.io.File;
 
-import com.esri.arcgisruntime.localserver.*;
-import com.esri.arcgisruntime.util.ListenableList;
-
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+
+import com.esri.arcgisruntime.localserver.LocalFeatureService;
+import com.esri.arcgisruntime.localserver.LocalGeoprocessingService;
+import com.esri.arcgisruntime.localserver.LocalMapService;
+import com.esri.arcgisruntime.localserver.LocalServer;
+import com.esri.arcgisruntime.localserver.LocalServerStatus;
+import com.esri.arcgisruntime.localserver.LocalService;
+import com.esri.arcgisruntime.util.ListenableList;
 
 public class LocalServerServicesController {
 
@@ -41,9 +50,9 @@ public class LocalServerServicesController {
 
   @FXML
   private void initialize() {
-  //[DocRef: Name=Fundamentals-Local_Server-Check_Install
+    //[DocRef: Name=Fundamentals-Local_Server-Check_Install-Java
     // check that local server install path can be accessed
-    if(LocalServer.INSTANCE.checkInstallValid()){
+    if (LocalServer.INSTANCE.checkInstallValid()) {
       server = LocalServer.INSTANCE;
     } else {
       Platform.runLater(() -> {
@@ -51,11 +60,11 @@ public class LocalServerServicesController {
         dialog.setHeaderText("Local Server Load Error");
         dialog.setContentText("Local Server install path couldn't be located.");
         dialog.showAndWait();
-        
+
         Platform.exit();
       });
     }
-  //[DocRef: Name=Fundamentals-Local_Server-Check_Install
+    //[DocRef: Name=Fundamentals-Local_Server-Check_Install-Java
   }
 
   /** 
@@ -63,16 +72,16 @@ public class LocalServerServicesController {
    */
   @FXML
   private void handleStartLocalServer() {
-  //[DocRef: Name=Fundamentals-Local_Server-Start
+    //[DocRef: Name=Fundamentals-Local_Server-Start-Java
     // start local server
     server.startAsync();
-    
- // watch server status
+
+    // watch server status
     server.addStatusChangedListener(status -> {
       statusLog.appendText("Server Status: " + status.getNewStatus().toString() + "\n");
       btnStartServer.setDisable(status.getNewStatus() == LocalServerStatus.STARTED);
     });
-  //[DocRef: Name=Fundamentals-Local_Server-Start
+    //[DocRef: Name=Fundamentals-Local_Server-Start-Java
 
     // get observable list of services
     services = server.getServices();
@@ -83,12 +92,12 @@ public class LocalServerServicesController {
    */
   @FXML
   private void handleStopLocalServer() {
-    //[DocRef: Name=Fundamentals-Local_Server-Stop
+    //[DocRef: Name=Fundamentals-Local_Server-Stop-Java
     // stop local server
     if (server.getStatus() == LocalServerStatus.STARTED) {
       server.stopAsync();
     }
-    //[DocRef: Name=Fundamentals-Local_Server-Stop
+    //[DocRef: Name=Fundamentals-Local_Server-Stop-Java
 
     // remove listed running services
     runningServices.getItems().clear();
@@ -127,8 +136,10 @@ public class LocalServerServicesController {
           break;
         case "Geoprocessing Service":
           serviceUrl = new File(pathStart + "MessageInABottle.gpk").getAbsolutePath();
-          localService = new LocalGeoprocessingService(serviceUrl); break;
-        default: localService = null;
+          localService = new LocalGeoprocessingService(serviceUrl);
+          break;
+        default:
+          localService = null;
       }
 
       // start local service and watch for updates

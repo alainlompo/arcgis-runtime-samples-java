@@ -16,7 +16,19 @@
 
 package com.esri.samples.displayinformation.add_graphics_with_symbols;
 
-import com.esri.arcgisruntime.geometry.*;
+import java.util.Arrays;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.PointCollection;
+import com.esri.arcgisruntime.geometry.Polygon;
+import com.esri.arcgisruntime.geometry.Polyline;
+import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.Graphic;
@@ -28,13 +40,6 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.TextSymbol;
 import com.esri.arcgisruntime.symbology.TextSymbol.HorizontalAlignment;
 import com.esri.arcgisruntime.symbology.TextSymbol.VerticalAlignment;
-
-import java.util.Arrays;
-
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 public class AddGraphicsWithSymbolsSample extends Application {
 
@@ -67,7 +72,7 @@ public class AddGraphicsWithSymbolsSample extends Application {
       mapView = new MapView();
       mapView.setMap(map);
 
-   // create the graphics overlay
+      // create the graphics overlay
       graphicsOverlay = new GraphicsOverlay();
       // add the graphic overlay to the map view
       mapView.getGraphicsOverlays().add(graphicsOverlay);
@@ -97,30 +102,29 @@ public class AddGraphicsWithSymbolsSample extends Application {
    */
   private void createPoints() {
 
-  //[DocRef: Name=Display_Information-Graphics-Marker_Symbol
+    //[DocRef: Name=Display_Information-Graphics-Marker_Symbol
     // create a red (0xFFFF0000) circle simple marker symbol
     SimpleMarkerSymbol redCircleSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0xFFFF0000, 10);
-  //[DocRef: Name=Display_Information-Graphics-Marker_Symbol
+    //[DocRef: Name=Display_Information-Graphics-Marker_Symbol
 
-  //[DocRef: Name=Display_Information-Graphics-Point
+    //[DocRef: Name=Display_Information-Graphics-Point
     Point buoy1Loc = new Point(-2.72, 56.065, SPATIAL_REFERENCE);
     Point buoy2Loc = new Point(-2.69, 56.065, SPATIAL_REFERENCE);
     Point buoy3Loc = new Point(-2.66, 56.065, SPATIAL_REFERENCE);
     Point buoy4Loc = new Point(-2.63, 56.065, SPATIAL_REFERENCE);
-  //[DocRef: Name=Display_Information-Graphics-Point
-    
-  //[DocRef: Name=Display_Information-Graphics-Graphics
+    //[DocRef: Name=Display_Information-Graphics-Point
+
+    //[DocRef: Name=Display_Information-Graphics-Graphics
     // create graphics and add to graphics overlay
     Graphic buoyGraphic1 = new Graphic(buoy1Loc, redCircleSymbol);
     Graphic buoyGraphic2 = new Graphic(buoy2Loc, redCircleSymbol);
     Graphic buoyGraphic3 = new Graphic(buoy3Loc, redCircleSymbol);
     Graphic buoyGraphic4 = new Graphic(buoy4Loc, redCircleSymbol);
-  //[DocRef: Name=Display_Information-Graphics-Graphics
-    
+    //[DocRef: Name=Display_Information-Graphics-Graphics
 
-  //[DocRef: Name=Display_Information-Graphics-Add_Graphics
+    //[DocRef: Name=Display_Information-Graphics-Add_Graphics
     graphicsOverlay.getGraphics().addAll(Arrays.asList(buoyGraphic1, buoyGraphic2, buoyGraphic3, buoyGraphic4));
-  //[DocRef: Name=Display_Information-Graphics-Add_Graphics
+    //[DocRef: Name=Display_Information-Graphics-Add_Graphics
   }
 
   /**
@@ -128,11 +132,11 @@ public class AddGraphicsWithSymbolsSample extends Application {
    */
   private void createPolyline() {
 
-  //[DocRef: Name=Display_Information-Graphics-Line_Symbol
+    //[DocRef: Name=Display_Information-Graphics-Line_Symbol
     // create a purple (0xFF800080) simple line symbol
     SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, 0xFF800080, 4);
-  //[DocRef: Name=Display_Information-Graphics-Line_Symbol
-  //[DocRef: Name=Display_Information-Graphics-Polyline
+    //[DocRef: Name=Display_Information-Graphics-Line_Symbol
+    //[DocRef: Name=Display_Information-Graphics-Polyline
     // create a new point collection for polyline
     PointCollection points = new PointCollection(SPATIAL_REFERENCE);
 
@@ -147,17 +151,17 @@ public class AddGraphicsWithSymbolsSample extends Application {
 
     // create the polyline from the point collection
     Polyline polyline = new Polyline(points);
-  //[DocRef: Name=Display_Information-Graphics-Polyline
+    //[DocRef: Name=Display_Information-Graphics-Polyline
 
-  //[DocRef: Name=Display_Information-Graphics-Graphic_Polyline
+    //[DocRef: Name=Display_Information-Graphics-Graphic_Polyline
     // create the graphic with polyline and symbol
     Graphic graphic = new Graphic(polyline, lineSymbol);
-  //[DocRef: Name=Display_Information-Graphics-Graphic_Polyline
+    //[DocRef: Name=Display_Information-Graphics-Graphic_Polyline
 
-  //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay_Polyline
+    //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay_Polyline
     // add graphic to the graphics overlay
     graphicsOverlay.getGraphics().add(graphic);
-  //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay_Polyline
+    //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay_Polyline
   }
 
   /**
@@ -165,13 +169,13 @@ public class AddGraphicsWithSymbolsSample extends Application {
    */
   private void createPolygon() {
 
-  //[DocRef: Name=Display_Information-Graphics-Fill_Symbol
+    //[DocRef: Name=Display_Information-Graphics-Fill_Symbol
     // create a green (0xFF005000) simple line symbol
     SimpleLineSymbol outlineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, 0xFF005000, 1);
     // create a green (0xFF005000) mesh simple fill symbol
     SimpleFillSymbol fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.DIAGONAL_CROSS, 0xFF005000,
         outlineSymbol);
-  //[DocRef: Name=Display_Information-Graphics-Fill_Symbol
+    //[DocRef: Name=Display_Information-Graphics-Fill_Symbol
 
     //[DocRef: Name=Display_Information-Graphics-Polygon
     // create a new point collection for polygon
@@ -189,15 +193,15 @@ public class AddGraphicsWithSymbolsSample extends Application {
     Polygon polygon = new Polygon(points);
     //[DocRef: Name=Display_Information-Graphics-Polygon
 
-  //[DocRef: Name=Display_Information-Graphics-Graphic_Polygon
+    //[DocRef: Name=Display_Information-Graphics-Graphic_Polygon
     // create the graphic with polyline and symbol
     Graphic graphic = new Graphic(polygon, fillSymbol);
-  //[DocRef: Name=Display_Information-Graphics-Graphic_Polygon
+    //[DocRef: Name=Display_Information-Graphics-Graphic_Polygon
 
-  //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay_Polygon
+    //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay_Polygon
     // add graphic to the graphics overlay
     graphicsOverlay.getGraphics().add(graphic);
-  //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay_Polygon
+    //[DocRef: Name=Display_Information-Graphics-GraphicsOverlay_Polygon
   }
 
   /**
@@ -205,31 +209,31 @@ public class AddGraphicsWithSymbolsSample extends Application {
    */
   private void createText() {
 
-  //[DocRef: Name=Display_Information-Graphics-Text_Symbol
+    //[DocRef: Name=Display_Information-Graphics-Text_Symbol
     // create two text symbols
     TextSymbol bassRockTextSymbol = new TextSymbol(10, "Bass Rock", BLUE, HorizontalAlignment.LEFT,
         VerticalAlignment.BOTTOM);
     TextSymbol craigleithTextSymbol = new TextSymbol(10, "Craigleith", BLUE, HorizontalAlignment.RIGHT,
         VerticalAlignment.TOP);
-  //[DocRef: Name=Display_Information-Graphics-Text_Symbol
+    //[DocRef: Name=Display_Information-Graphics-Text_Symbol
 
-  //[DocRef: Name=Display_Information-Graphics-Text_Point
+    //[DocRef: Name=Display_Information-Graphics-Text_Point
     // create two points
     Point bassPoint = new Point(-2.64, 56.079, SPATIAL_REFERENCE);
     Point craigleithPoint = new Point(-2.72, 56.076, SPATIAL_REFERENCE);
-  //[DocRef: Name=Display_Information-Graphics-Text_Point
+    //[DocRef: Name=Display_Information-Graphics-Text_Point
 
-  //[DocRef: Name=Display_Information-Graphics-Text_Graphic
+    //[DocRef: Name=Display_Information-Graphics-Text_Graphic
     // create two graphics from the points and symbols
     Graphic bassRockGraphic = new Graphic(bassPoint, bassRockTextSymbol);
     Graphic craigleithGraphic = new Graphic(craigleithPoint, craigleithTextSymbol);
-  //[DocRef: Name=Display_Information-Graphics-Text_Graphic
+    //[DocRef: Name=Display_Information-Graphics-Text_Graphic
 
-  //[DocRef: Name=Display_Information-Graphics-Text_GraphicsOverlay
-    // add graphics to the graphics overlay
+    //[DocRef: Name=Display_Information-Graphics-Text_GraphicsOverlay
+    // add graphics to the graphics overlay 
     graphicsOverlay.getGraphics().add(bassRockGraphic);
     graphicsOverlay.getGraphics().add(craigleithGraphic);
-  //[DocRef: Name=Display_Information-Graphics-Text_GraphicsOverlay
+    //[DocRef: Name=Display_Information-Graphics-Text_GraphicsOverlay
   }
 
   /**

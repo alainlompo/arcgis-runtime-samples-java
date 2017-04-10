@@ -17,7 +17,16 @@
 package com.esri.samples.localserver.local_server_feature_layer;
 
 import java.io.File;
-import java.util.concurrent.ExecutionException;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
@@ -25,21 +34,10 @@ import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.localserver.LocalFeatureService;
 import com.esri.arcgisruntime.localserver.LocalServer;
 import com.esri.arcgisruntime.localserver.LocalServerStatus;
-import com.esri.arcgisruntime.localserver.LocalService.StatusChangedEvent;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
-
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 public class LocalServerFeatureLayerSample extends Application {
 
@@ -49,7 +47,7 @@ public class LocalServerFeatureLayerSample extends Application {
   private MapView mapView;
   private LocalFeatureService featureService;
   private ProgressIndicator featureLayerProgress;
-  
+
   private LocalServer server;
 
   @Override
@@ -75,37 +73,37 @@ public class LocalServerFeatureLayerSample extends Application {
       // track progress of loading feature layer to map
       featureLayerProgress = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
       featureLayerProgress.setMaxWidth(30);
-      
+
       // check that local server install path can be accessed
-      if(LocalServer.INSTANCE.checkInstallValid()){
+      if (LocalServer.INSTANCE.checkInstallValid()) {
         server = LocalServer.INSTANCE;
-     // start local server
+        // start local server
         server.startAsync();
         server.addStatusChangedListener(status -> {
           if (server.getStatus() == LocalServerStatus.STARTED) {
             // start feature service
-          //[DocRef: Name=Fundamentals-Local_Server-Map_Service
+            //[DocRef: Name=Fundamentals-Local_Server-Map_Service-Java
             String featureServiceURL = new File("samples-data/local_server/PointsofInterest.mpk").getAbsolutePath();
             featureService = new LocalFeatureService(featureServiceURL);
             featureService.addStatusChangedListener(l -> {
-                // get the url of where feature service is located
-                String url = featureService.getUrl() + "/0";
-                // create a feature layer using the url
-                ServiceFeatureTable featureTable = new ServiceFeatureTable(url);
-                featureTable.loadAsync();
-                FeatureLayer featureLayer = new FeatureLayer(featureTable);
-                featureLayer.addDoneLoadingListener(() -> {
-                  if (featureLayer.getLoadStatus() == LoadStatus.LOADED && featureLayer.getFullExtent() != null) {
-                    mapView.setViewpoint(new Viewpoint(featureLayer.getFullExtent()));
-                    Platform.runLater(() -> featureLayerProgress.setVisible(false));
-                  }
-                });
-                featureLayer.loadAsync();
-                // add feature layer to map
-                map.getOperationalLayers().add(featureLayer);
+              // get the url of where feature service is located
+              String url = featureService.getUrl() + "/0";
+              // create a feature layer using the url
+              ServiceFeatureTable featureTable = new ServiceFeatureTable(url);
+              featureTable.loadAsync();
+              FeatureLayer featureLayer = new FeatureLayer(featureTable);
+              featureLayer.addDoneLoadingListener(() -> {
+                if (featureLayer.getLoadStatus() == LoadStatus.LOADED && featureLayer.getFullExtent() != null) {
+                  mapView.setViewpoint(new Viewpoint(featureLayer.getFullExtent()));
+                  Platform.runLater(() -> featureLayerProgress.setVisible(false));
+                }
+              });
+              featureLayer.loadAsync();
+              // add feature layer to map
+              map.getOperationalLayers().add(featureLayer);
             });
             featureService.startAsync();
-          //[DocRef: Name=Fundamentals-Local_Server-Map_Service
+            //[DocRef: Name=Fundamentals-Local_Server-Map_Service-Java
           }
         });
       } else {
@@ -114,7 +112,7 @@ public class LocalServerFeatureLayerSample extends Application {
           dialog.setHeaderText("Local Server Load Error");
           dialog.setContentText("Local Server install path couldn't be located.");
           dialog.showAndWait();
-          
+
           Platform.exit();
         });
       }
@@ -127,7 +125,7 @@ public class LocalServerFeatureLayerSample extends Application {
       e.printStackTrace();
     }
   }
-  
+
   /**
    * Stops and releases all resources used in application.
    */

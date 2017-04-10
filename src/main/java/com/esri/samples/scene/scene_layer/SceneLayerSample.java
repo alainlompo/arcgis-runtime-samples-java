@@ -16,6 +16,11 @@
 
 package com.esri.samples.scene.scene_layer;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
@@ -23,11 +28,6 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.SceneView;
-
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 public class SceneLayerSample extends Application {
 
@@ -49,37 +49,35 @@ public class SceneLayerSample extends Application {
       stage.setScene(fxScene);
       stage.show();
 
-    //[DocRef: Name=Working_With_3d-Display_Scene-Create_SceneLayer
+      //[DocRef: Name=Working_With_3d-Display_Scene-Create_SceneLayer
       // create a scene and add a basemap to it
       ArcGISScene scene = new ArcGISScene();
       scene.setBasemap(Basemap.createImagery());
-      
-   // add a scene layer
-      String buildings = "http://scene.arcgis.com/arcgis/rest/services/Hosted/Buildings_Brest/SceneServer/layers/0";
-       ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
-       scene.getOperationalLayers().add(sceneLayer);
-     //[DocRef: Name=Working_With_3d-Display_Scene-Create_SceneLayer
 
-     //[DocRef: Name=Working_With_3d-Display_Scene-Display_Scene
+      // add a scene layer
+      String buildings = "http://scene.arcgis.com/arcgis/rest/services/Hosted/Buildings_Brest/SceneServer/layers/0";
+      ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
+      scene.getOperationalLayers().add(sceneLayer);
+      //[DocRef: Name=Working_With_3d-Display_Scene-Create_SceneLayer
+
       // add the SceneView to the stack pane
       sceneView = new SceneView();
       sceneView.setArcGISScene(scene);
       stackPane.getChildren().addAll(sceneView);
-    //[DocRef: Name=Working_With_3d-Display_Scene-Display_Scene
 
-    //[DocRef: Name=Working_With_3d-Display_Scene-Elevation
+      //[DocRef: Name=Working_With_3d-Display_Scene-Elevation
       // add base surface for elevation data
       Surface surface = new Surface();
       String localElevationImageService = "http://scene.arcgis.com/arcgis/rest/services/BREST_DTM_1M/ImageServer";
       surface.getElevationSources().add(new ArcGISTiledElevationSource(localElevationImageService));
       scene.setBaseSurface(surface);
-    //[DocRef: Name=Working_With_3d-Display_Scene-Elevation
+      //[DocRef: Name=Working_With_3d-Display_Scene-Elevation
 
-    //[DocRef: Name=Working_With_3d-Display_Scene-Camera
+      //[DocRef: Name=Working_With_3d-Display_Scene-Camera
       // add a camera and initial camera position (Brest, France)
-      Camera camera = new Camera(48.37,-4.50, 1000.0, 10.0, 70, 0.0);
+      Camera camera = new Camera(48.37, -4.50, 1000.0, 10.0, 70, 0.0);
       sceneView.setViewpointCamera(camera);
-    //[DocRef: Name=Working_With_3d-Display_Scene-Camera
+      //[DocRef: Name=Working_With_3d-Display_Scene-Camera
 
     } catch (Exception e) {
       // on any error, display the stack trace.

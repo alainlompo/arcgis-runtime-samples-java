@@ -168,7 +168,7 @@ public class UpdateGraphicsSample extends Application {
           // clear any selected graphic
           graphicsOverlay.clearSelection();
 
-        //[DocRef: Name=Display_Information-Graphics-Set_Geometry
+          //[DocRef: Name=Display_Information-Graphics-Set_Geometry
           // create a point from location clicked
           Point2D mapViewPoint = new Point2D(e.getX(), e.getY());
 
@@ -176,7 +176,7 @@ public class UpdateGraphicsSample extends Application {
             // add new location to selected graphic
             Point mapPoint = mapView.screenToLocation(mapViewPoint);
             selectedGraphic.setGeometry(mapPoint);
-          //[DocRef: Name=Display_Information-Graphics-Set_Geometry
+            //[DocRef: Name=Display_Information-Graphics-Set_Geometry
             isUpdateLocationActive = false;
           } else {
             // identify the graphic that was selected

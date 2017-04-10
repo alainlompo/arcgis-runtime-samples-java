@@ -49,7 +49,7 @@ public class DisplayMapSample extends Application {
       stage.setScene(scene);
       stage.show();
 
-      //[DocRef: Name=Get_Started-First_Map_App-DisplayMap
+      //[DocRef: Name=Get_Started-First_Map_App-DisplayMap-Java
       // create a ArcGISMap with the a Basemap instance with an Imagery base
       // layer
       ArcGISMap map = new ArcGISMap(Basemap.createImagery());
@@ -60,7 +60,7 @@ public class DisplayMapSample extends Application {
 
       // add the map view to stack pane
       stackPane.getChildren().addAll(mapView);
-      //[DocRef: Name=Get_Started-First_Map_App-DisplayMap
+      //[DocRef: Name=Get_Started-First_Map_App-DisplayMap-Java
     } catch (Exception e) {
       // on any error, display the stack trace.
       e.printStackTrace();

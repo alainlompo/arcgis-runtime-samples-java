@@ -13,5 +13,5 @@ RasterLayer mosaicDatasetRasterLayer = new RasterLayer(mosaicDatasetRaster);
 
 // add as an operational layer
 ArcGISMap map = new ArcGISMap(Basemap.createLightGrayCanvasVector());
-map.getOperationalLayers().add(mosaicDatasetRasterLayer );
+map.getOperationalLayers().add(mosaicDatasetRasterLayer);
 //[DocRef: Name=Working_With_Maps-Add_Raster_data-Raster_Mosaic

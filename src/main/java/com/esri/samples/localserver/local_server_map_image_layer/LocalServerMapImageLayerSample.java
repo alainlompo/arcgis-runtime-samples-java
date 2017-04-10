@@ -18,26 +18,25 @@ package com.esri.samples.localserver.local_server_map_image_layer;
 
 import java.io.File;
 
-import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
-import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.esri.arcgisruntime.localserver.LocalMapService;
-import com.esri.arcgisruntime.localserver.LocalServer;
-import com.esri.arcgisruntime.localserver.LocalServerStatus;
-import com.esri.arcgisruntime.localserver.LocalService.StatusChangedEvent;
-import com.esri.arcgisruntime.mapping.ArcGISMap;
-import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Viewpoint;
-import com.esri.arcgisruntime.mapping.view.MapView;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import com.esri.arcgisruntime.layers.ArcGISMapImageLayer;
+import com.esri.arcgisruntime.loadable.LoadStatus;
+import com.esri.arcgisruntime.localserver.LocalMapService;
+import com.esri.arcgisruntime.localserver.LocalServer;
+import com.esri.arcgisruntime.localserver.LocalServerStatus;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.MapView;
 
 public class LocalServerMapImageLayerSample extends Application {
 
@@ -46,7 +45,7 @@ public class LocalServerMapImageLayerSample extends Application {
   private MapView mapView;
   private LocalMapService mapImageService;
   private ProgressIndicator imageLayerProgress;
-  
+
   private LocalServer server;
 
   @Override
@@ -72,35 +71,35 @@ public class LocalServerMapImageLayerSample extends Application {
       // track progress of loading map image layer to map
       imageLayerProgress = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
       imageLayerProgress.setMaxWidth(30);
-      
-   // check that local server install path can be accessed
-      if(LocalServer.INSTANCE.checkInstallValid()){
+
+      // check that local server install path can be accessed
+      if (LocalServer.INSTANCE.checkInstallValid()) {
         server = LocalServer.INSTANCE;
-     // start local server
+        // start local server
         server.addStatusChangedListener(status -> {
           if (status.getNewStatus() == LocalServerStatus.STARTED) {
-          //[DocRef: Name=Fundamentals-Local_Server-MapService
+            //[DocRef: Name=Fundamentals-Local_Server-MapService-Java
             // start map image service
             String mapServiceURL = new File("./samples-data/local_server/RelationshipID.mpk").getAbsolutePath();
             mapImageService = new LocalMapService(mapServiceURL);
             mapImageService.addStatusChangedListener(l -> {
-                // get the url of where map service is located
-                String url = mapImageService.getUrl();
-                // create a map image layer using url
-                ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(url);
-                // set viewpoint once layer has loaded
-                imageLayer.addDoneLoadingListener(() -> {
-                  if (imageLayer.getLoadStatus() == LoadStatus.LOADED && imageLayer.getFullExtent() != null) {
-                    mapView.setViewpoint(new Viewpoint(imageLayer.getFullExtent()));
-                    Platform.runLater(() -> imageLayerProgress.setVisible(false));
-                  }
-                });
-                imageLayer.loadAsync();
-                // add image layer to map
-                mapView.getMap().getOperationalLayers().add(imageLayer);
+              // get the url of where map service is located
+              String url = mapImageService.getUrl();
+              // create a map image layer using url
+              ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(url);
+              // set viewpoint once layer has loaded
+              imageLayer.addDoneLoadingListener(() -> {
+                if (imageLayer.getLoadStatus() == LoadStatus.LOADED && imageLayer.getFullExtent() != null) {
+                  mapView.setViewpoint(new Viewpoint(imageLayer.getFullExtent()));
+                  Platform.runLater(() -> imageLayerProgress.setVisible(false));
+                }
+              });
+              imageLayer.loadAsync();
+              // add image layer to map
+              mapView.getMap().getOperationalLayers().add(imageLayer);
             });
             mapImageService.startAsync();
-          //[DocRef: Name=Fundamentals-Local_Server-MapService
+            //[DocRef: Name=Fundamentals-Local_Server-MapService-Java
           }
         });
         server.startAsync();
@@ -110,7 +109,7 @@ public class LocalServerMapImageLayerSample extends Application {
           dialog.setHeaderText("Local Server Load Error");
           dialog.setContentText("Local Server install path couldn't be located.");
           dialog.showAndWait();
-          
+
           Platform.exit();
         });
       }

@@ -20,6 +20,14 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
@@ -29,14 +37,6 @@ import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
-
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 public class PictureMarkerSymbolSample extends Application {
 
@@ -92,13 +92,13 @@ public class PictureMarkerSymbolSample extends Application {
       // place blue picture marker symbol on ArcGISMap
       placePictureMarkerSymbol(blueSymbol, middlePoint);
 
-    //[DocRef: Name=Fundamentals-Renderer_Symbols-PMS1
+      //[DocRef: Name=Fundamentals-Renderer_Symbols-PMS1-Java
       // create campsite picture marker symbol from URL
       PictureMarkerSymbol campsiteSymbol = new PictureMarkerSymbol(CAMPSITE_SYMBOL);
 
       // place campsite picture marker symbol on ArcGISMap
       map.addDoneLoadingListener(() -> Platform.runLater(() -> placePictureMarkerSymbol(campsiteSymbol, rightPoint)));
-    //[DocRef: Name=Fundamentals-Renderer_Symbols-PMS1
+      //[DocRef: Name=Fundamentals-Renderer_Symbols-PMS1-Java
 
       // set ArcGISMap to be displayed in mapview
       mapView.setMap(map);
@@ -114,7 +114,7 @@ public class PictureMarkerSymbolSample extends Application {
     }
   }
 
-  //[DocRef: Name=Fundamentals-Renderer_Symbols-PMS2
+  //[DocRef: Name=Fundamentals-Renderer_Symbols-PMS2-Java
   /**
    * Adds a Graphic to the Graphics Overlay using a Point and a Picture Marker
    * Symbol.
@@ -138,7 +138,7 @@ public class PictureMarkerSymbolSample extends Application {
     });
 
   }
-  //[DocRef: Name=Fundamentals-Renderer_Symbols-PMS2
+  //[DocRef: Name=Fundamentals-Renderer_Symbols-PMS2-Java
 
   /**
    * Writes a resource image to a file.

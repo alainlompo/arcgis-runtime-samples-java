@@ -73,21 +73,21 @@ public class LocalServerGeoprocessingController {
       tiledLayer.loadAsync();
       tiledLayer.addDoneLoadingListener(() -> mapView.setViewpointGeometryAsync(tiledLayer.getFullExtent()));
       map.getOperationalLayers().add(tiledLayer);
-      
+
       // check that local server install path can be accessed
-      if(LocalServer.INSTANCE.checkInstallValid()){
+      if (LocalServer.INSTANCE.checkInstallValid()) {
         server = LocalServer.INSTANCE;
-     // listen for the status of the local server to change
+        // listen for the status of the local server to change
         server.addStatusChangedListener(status -> {
           // start local geoprocessing service once local server has started
           if (status.getNewStatus() == LocalServerStatus.STARTED) {
             try {
-            //[DocRef: Name=Fundamentals-Local_Server-Geoprocessing
+              //[DocRef: Name=Fundamentals-Local_Server-Geoprocessing-Java
               String gpServiceURL = new File("./samples-data/local_server/Contour.gpk").getAbsolutePath();
               // need map server result to add contour lines to map
               localGPService =
                   new LocalGeoprocessingService(gpServiceURL, ServiceType.ASYNCHRONOUS_SUBMIT_WITH_MAP_SERVER_RESULT);
-              
+
               localGPService.addStatusChangedListener(s -> {
                 // create geoprocessing task once local geoprocessing service is started
                 if (s.getNewStatus() == LocalServerStatus.STARTED) {
@@ -98,7 +98,7 @@ public class LocalServerGeoprocessingController {
                 }
               });
               localGPService.startAsync();
-            //[DocRef: Name=Fundamentals-Local_Server-Geoprocessing
+              //[DocRef: Name=Fundamentals-Local_Server-Geoprocessing-Java
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -111,7 +111,7 @@ public class LocalServerGeoprocessingController {
           dialog.setHeaderText("Local Server Load Error");
           dialog.setContentText("Local Server install path couldn't be located.");
           dialog.showAndWait();
-          
+
           Platform.exit();
         });
       }

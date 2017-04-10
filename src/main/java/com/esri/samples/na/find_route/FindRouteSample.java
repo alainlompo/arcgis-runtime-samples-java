@@ -172,14 +172,14 @@ public class FindRouteSample extends Application {
         routeTask = new RouteTask(routeTaskSanDiego);
         //[DocRef: Name=Route_And_Directions-Find_Route-Route_Task
 
-        //[DocRef: Name=Route_And_Directions-Find_Route-Load_Task
+        //[DocRef: Name=Route_And_Directions-Find_Route-Load_Task-Java
         // load route task
         routeTask.loadAsync();
         routeTask.addDoneLoadingListener(() -> {
 
           try {
             if (routeTask.getLoadError() == null && routeTask.getLoadStatus() == LoadStatus.LOADED) {
-              //[DocRef: Name=Route_And_Directions-Find_Route-Load_Task
+              //[DocRef: Name=Route_And_Directions-Find_Route-Load_Task-Java
 
               //[DocRef: Name=Route_And_Directions-Find_Route-Default_Parameters
               // get default route parameters
