@@ -1,0 +1,3 @@
+//[DocRef: Name=Edit_Features-Edit_Geometries-Polygon_Buider_Remove_Segment
+Edit_Features-Edit_Geometries-Polygon_Remove_Segment
+//[DocRef: Name=Edit_Features-Edit_Geometries-Polygon_Buider_Remove_Segment

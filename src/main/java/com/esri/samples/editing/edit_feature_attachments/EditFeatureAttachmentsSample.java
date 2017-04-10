@@ -62,9 +62,6 @@ public class EditFeatureAttachmentsSample extends Application {
   private ArcGISFeature selected;
   private List<Attachment> attachments;
 
-  private static final String SERVICE_FEATURE_URL =
-      "http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0";
-
   @Override
   public void start(Stage stage) throws Exception {
 
@@ -118,8 +115,10 @@ public class EditFeatureAttachmentsSample extends Application {
       // create a map with streets basemap
       ArcGISMap map = new ArcGISMap(Basemap.Type.STREETS, 40, -95, 4);
 
+      String serviceFeatureUrl =
+          "http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/FeatureServer/0";
       // create service feature table from URL
-      featureTable = new ServiceFeatureTable(SERVICE_FEATURE_URL);
+      featureTable = new ServiceFeatureTable(serviceFeatureUrl);
 
       // create a feature layer from service feature table
       featureLayer = new FeatureLayer(featureTable);
