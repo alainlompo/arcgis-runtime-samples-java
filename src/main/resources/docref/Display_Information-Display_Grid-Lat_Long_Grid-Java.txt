@@ -1,7 +1,7 @@
-//[DocRef: Name=Display_Information-Display_Grid-Lat_Long_Grid
+//[DocRef: Name=Display_Information-Display_Grid-Lat_Long_Grid-Java
 //create a grid for showing Latitude and Longitude (Meridians and Parallels)
 LatitudeLongitudeGrid grid = new LatitudeLongitudeGrid();
       
 //display the grid on the map view
 mapView.setGrid(grid);
-//[DocRef: Name=Display_Information-Display_Grid-Lat_Long_Grid
+//[DocRef: Name=Display_Information-Display_Grid-Lat_Long_Grid-Java

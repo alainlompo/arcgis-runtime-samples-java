@@ -1,0 +1,4 @@
+//[DocRef: Name=Display_Information-Display_Grid-Label_Position_Top-Java
+// hide the grid
+grid.setVisible(false);
+//[DocRef: Name=Display_Information-Display_Grid-Label_Position_Top-Java

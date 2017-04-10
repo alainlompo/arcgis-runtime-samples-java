@@ -1,4 +1,4 @@
-//[DocRef: Name=Display_Information-Display_Grid-Halo
+//[DocRef: Name=Display_Information-Display_Grid-Halo-Java
 // create a line symbol (a thick purple line)
 SimpleLineSymbol lineSymbol = new SimpleLineSymbol(Style.SOLID, 0xFF663399, 5);
 
@@ -8,4 +8,4 @@ textSymbol.setSize(20);
 textSymbol.setColor(0xFFFFFFFF);
 textSymbol.setHaloColor(0xFF000099);
 textSymbol.setHaloWidth(5);
-//[DocRef: Name=Display_Information-Display_Grid-Halo
+//[DocRef: Name=Display_Information-Display_Grid-Halo-Java

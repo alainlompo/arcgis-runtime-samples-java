@@ -1,4 +1,0 @@
-//[DocRef: Name=Display_Information-Display_Grid-Label_Visibility
-// hide the grid labels
-grid.setLabelVisible(false);
-//[DocRef: Name=Display_Information-Display_Grid-Label_Visibility
