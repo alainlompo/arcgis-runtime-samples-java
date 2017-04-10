@@ -18,10 +18,23 @@ package com.esri.samples.na.find_route;
 
 import java.util.List;
 
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 import com.esri.arcgisruntime.geometry.Envelope;
-import com.esri.arcgisruntime.geometry.Geometry;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReference;
+import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.DrawStatus;
@@ -34,18 +47,13 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol.Style;
 import com.esri.arcgisruntime.symbology.TextSymbol;
 import com.esri.arcgisruntime.symbology.TextSymbol.HorizontalAlignment;
 import com.esri.arcgisruntime.symbology.TextSymbol.VerticalAlignment;
-import com.esri.arcgisruntime.tasks.networkanalysis.*;
-
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import com.esri.arcgisruntime.tasks.networkanalysis.DirectionMessageType;
+import com.esri.arcgisruntime.tasks.networkanalysis.PointBarrier;
+import com.esri.arcgisruntime.tasks.networkanalysis.Route;
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteParameters;
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteResult;
+import com.esri.arcgisruntime.tasks.networkanalysis.RouteTask;
+import com.esri.arcgisruntime.tasks.networkanalysis.Stop;
 
 public class FindRouteSample extends Application {
 
@@ -60,9 +68,7 @@ public class FindRouteSample extends Application {
   private final SpatialReference ESPG_3857 = SpatialReference.create(102100);
   private static final int WHITE_COLOR = 0xffffffff;
   private static final int BLUE_COLOR = 0xff0000ff;
-
-  private static final String ROUTE_TASK_SANDIEGO =
-      "http://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/Route";
+  private static final int RED_COLOR = 0xffff0000;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -98,16 +104,19 @@ public class FindRouteSample extends Application {
 
       // find route
       findButton.setOnAction(e -> {
+        //[DocRef: Name=Route_And_Directions-Find_Route-Solve
         try {
           RouteResult result = routeTask.solveRouteAsync(routeParameters).get();
+          //[DocRef: Name=Route_And_Directions-Find_Route-Solve
+          //[DocRef: Name=Route_And_Directions-Find_Route-Display_Route
           List<Route> routes = result.getRoutes();
           if (routes.size() < 1) {
             directionsList.getItems().add("No Routes");
           }
           Route route = routes.get(0);
-          Geometry shape = route.getRouteGeometry();
-          routeGraphic = new Graphic(shape, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, BLUE_COLOR, 2));
+          routeGraphic = new Graphic(route.getRouteGeometry(), new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, BLUE_COLOR, 2));
           routeGraphicsOverlay.getGraphics().add(routeGraphic);
+          //[DocRef: Name=Route_And_Directions-Find_Route-Display_Route
 
           // get route street names
           route.getDirectionManeuvers().stream().flatMap(mvr -> mvr.getManeuverMessages().stream()).filter(ms -> ms
@@ -156,43 +165,70 @@ public class FindRouteSample extends Application {
       mapView.getGraphicsOverlays().add(routeGraphicsOverlay);
 
       try {
+        //[DocRef: Name=Route_And_Directions-Find_Route-Route_Task
         // create route task from San Diego service
-        routeTask = new RouteTask(ROUTE_TASK_SANDIEGO);
+        String routeTaskSanDiego =
+            "http://sampleserver6.arcgisonline.com/arcgis/rest/services/NetworkAnalysis/SanDiego/NAServer/Route";
+        routeTask = new RouteTask(routeTaskSanDiego);
+        //[DocRef: Name=Route_And_Directions-Find_Route-Route_Task
 
+        //[DocRef: Name=Route_And_Directions-Find_Route-Load_Task
         // load route task
         routeTask.loadAsync();
         routeTask.addDoneLoadingListener(() -> {
 
           try {
-            // get default route parameters
-            routeParameters = routeTask.createDefaultParametersAsync().get();
-            routeParameters.setOutputSpatialReference(ESPG_3857);
+            if (routeTask.getLoadError() == null && routeTask.getLoadStatus() == LoadStatus.LOADED) {
+              //[DocRef: Name=Route_And_Directions-Find_Route-Load_Task
 
-            // set flags to return stops and directions
-            routeParameters.setReturnStops(true);
-            routeParameters.setReturnDirections(true);
+              //[DocRef: Name=Route_And_Directions-Find_Route-Default_Parameters
+              // get default route parameters
+              routeParameters = routeTask.createDefaultParametersAsync().get();
 
-            // set stop locations
-            Point stop1Loc = new Point(-1.3018598562659847E7, 3863191.8817135547, ESPG_3857);
-            Point stop2Loc = new Point(-1.3036911787723785E7, 3839935.706521739, ESPG_3857);
+              // set flags to return stops and directions
+              routeParameters.setReturnStops(true);
+              routeParameters.setReturnDirections(true);
+              routeParameters.setOutputSpatialReference(ESPG_3857);
+              //[DocRef: Name=Route_And_Directions-Find_Route-Default_Parameters
 
-            // add route stops
-            List<Stop> routeStops = routeParameters.getStops();
-            routeStops.add(new Stop(stop1Loc));
-            routeStops.add(new Stop(stop2Loc));
+              //[DocRef: Name=Route_And_Directions-Find_Route-Stops_And_Barriers
+              // set stop locations
+              Point stop1Loc = new Point(-1.3018598562659847E7, 3863191.8817135547, ESPG_3857);
+              Point stop2Loc = new Point(-1.3036911787723785E7, 3839935.706521739, ESPG_3857);
 
-            // add route stops to the stops overlay
-            SimpleMarkerSymbol stopMarker = new SimpleMarkerSymbol(Style.CIRCLE, BLUE_COLOR, 14);
-            routeGraphicsOverlay.getGraphics().add(new Graphic(stop1Loc, stopMarker));
-            routeGraphicsOverlay.getGraphics().add(new Graphic(stop2Loc, stopMarker));
+              // add route stops
+              List<Stop> routeStops = routeParameters.getStops();
+              routeStops.add(new Stop(stop1Loc));
+              routeStops.add(new Stop(stop2Loc));
 
-            // add order text symbols to the stops
-            TextSymbol stop1Text = new TextSymbol(10, "1", WHITE_COLOR, HorizontalAlignment.CENTER,
-                VerticalAlignment.MIDDLE);
-            TextSymbol stop2Text = new TextSymbol(10, "2", WHITE_COLOR, HorizontalAlignment.CENTER,
-                VerticalAlignment.MIDDLE);
-            routeGraphicsOverlay.getGraphics().add(new Graphic(stop1Loc, stop1Text));
-            routeGraphicsOverlay.getGraphics().add(new Graphic(stop2Loc, stop2Text));
+              // create barriers
+              PointBarrier pointBarrier = new PointBarrier(new Point(-1.302759917994629E7, 3853256.753745117, ESPG_3857));
+              // add barriers to routeParameters
+              routeParameters.getPointBarriers().add(pointBarrier);
+              //[DocRef: Name=Route_And_Directions-Find_Route-Stops_And_Barriers
+
+              // add route stops to the stops overlay
+              SimpleMarkerSymbol stopMarker = new SimpleMarkerSymbol(Style.CIRCLE, BLUE_COLOR, 14);
+              routeGraphicsOverlay.getGraphics().add(new Graphic(stop1Loc, stopMarker));
+              routeGraphicsOverlay.getGraphics().add(new Graphic(stop2Loc, stopMarker));
+              SimpleMarkerSymbol barrierMarker = new SimpleMarkerSymbol(Style.CROSS, RED_COLOR, 14);
+              routeGraphicsOverlay.getGraphics().add(new Graphic(pointBarrier.getGeometry(), barrierMarker));
+
+              // add order text symbols to the stops
+              TextSymbol stop1Text = new TextSymbol(10, "1", WHITE_COLOR, HorizontalAlignment.CENTER,
+                  VerticalAlignment.MIDDLE);
+              TextSymbol stop2Text = new TextSymbol(10, "2", WHITE_COLOR, HorizontalAlignment.CENTER,
+                  VerticalAlignment.MIDDLE);
+              routeGraphicsOverlay.getGraphics().add(new Graphic(stop1Loc, stop1Text));
+              routeGraphicsOverlay.getGraphics().add(new Graphic(stop2Loc, stop2Text));
+            } else {
+              Platform.runLater(() -> {
+                Alert dialog = new Alert(Alert.AlertType.ERROR);
+                dialog.setHeaderText("Route Task Load Error");
+                dialog.setContentText("Error: " + routeTask.getLoadError().getAdditionalMessage());
+                dialog.showAndWait();
+              });
+            }
 
           } catch (Exception ex) {
             ex.printStackTrace();
